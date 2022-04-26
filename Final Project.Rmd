@@ -11,12 +11,14 @@ output:
 library(tidyverse)
 library(ggplot2)
 library(readxl)
+library(dplyr)
 ```
 
 ### Load all Comicbook Movies Ever Made
 ```{r}
 comicmovie <- read_excel("comicmovie.xlsx")
 comicmovie
+nrow(comicmovie)
 ```
 
 ```{r}
@@ -64,48 +66,37 @@ Other_Budget
 
 
 
-## Most Expensive Comic Movie of All Time
+## Most Expensive and Cheapest Comic Movie of All Time
 ```{r}
 filter(comicmovie, Budget == max(Budget, na.rm = TRUE))
-```
 
-## Cheapest Comic Movie of All Time
-```{r}
 filter(comicmovie, Budget == min(Budget, na.rm = TRUE))
 ```
 
+
+
+
 ### Group movies by Ratings
 
-#### 7 and up = Good Movie
-#### 6-6.9 = Average Movie
-#### 5 and below = Bad Movie
+#### T1 = Good Movie
+#### T2 = Average Movie
+#### T3 = Bad Movie
 ```{r}
-Good_Movies <- filter(comicmovie, Rating >= 7)
-arrange(Good_Movies, desc(Rating))
-```
-```{r}
+Good_Movies <- filter(comicmovie, IMDB >= 7)
+arrange(Good_Movies, desc(IMDB))
+
 Good_Marvel <- filter(Good_Movies, Owner=="Marvel")
 Good_DC <- filter(Good_Movies, Owner=="DC")
 Good_Other <- filter(Good_Movies, Owner=="Other")
-```
 
-
-```{r}
-Average_Movies <- filter(comicmovie, Rating >= 6, Rating < 7)
+Average_Movies <- filter(comicmovie, IMDB >= 6, IMDB < 7)
 Average_Movies
-```
-```{r}
 Average_Marvel <- filter(Average_Movies, Owner=="Marvel")
 Average_DC <- filter(Average_Movies, Owner=="DC")
 Average_Other <- filter(Average_Movies, Owner=="Other")
-```
 
-
-```{r}
-Bad_Movies <- filter(comicmovie, Rating < 6,  )
+Bad_Movies <- filter(comicmovie, IMDB < 6,  )
 Bad_Movies
-```
-```{r}
 Bad_Marvel <- filter(Bad_Movies, Owner=="Marvel")
 Bad_DC <- filter(Bad_Movies, Owner=="DC")
 Bad_Other <- filter(Bad_Movies, Owner=="Other")
@@ -165,6 +156,21 @@ print (df)
 
 ## Visual Data
 
+
+### Year with the most movies
+```{r}
+comicmovie %>%  
+ggplot(aes(x=Year)) +
+    geom_density(fill="#69b3a2", color="#e9ecef", alpha=1)
+```
+```{r}
+most_year<-filter(comicmovie, Year == "2019")
+nrow(most_year)
+```
+
+
+
+
 ### Comparing Brands Budget
 
 
@@ -198,8 +204,19 @@ ggplot(data = df) +
 
 ```{r}
 ggplot(data = comicmovie) + 
-  geom_point(aes(x = Budget, y = Rating, color = Owner))
+  geom_point(aes(x = Budget, y = IMDB, color = Owner))
 ```
+### Movies with very diffrent audiance and Rotten Tomatoe scores 
+```{r}
+RTvsA<- mutate(comicmovie, RT_vs_Audiance = (Audience/RT))
+
+dif <- arrange(RTvsA, desc(RT_vs_Audiance))
+head(dif, 3)
+```
+
+
+
+
 
 
 
