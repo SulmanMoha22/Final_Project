@@ -1,0 +1,212 @@
+---
+title: "Final Project"
+Name: "Sulman Mohamed"
+output:
+  html_document:
+    df_print: paged
+---
+
+
+```{r}
+library(tidyverse)
+library(ggplot2)
+library(readxl)
+```
+
+### Load all Comicbook Movies Ever Made
+```{r}
+comicmovie <- read_excel("comicmovie.xlsx")
+comicmovie
+```
+
+```{r}
+glimpse(comicmovie)
+```
+
+# Group Data
+
+### All Marvel Movies
+```{r}
+Marvel <- filter(comicmovie, Owner == "Marvel") 
+  nrow(Marvel)
+  
+Marvel
+```
+```{r}
+Marvel_Budget <-summarise(Marvel, ave_budget = mean(Budget, na.rm=TRUE))
+Marvel_Budget
+```
+
+
+### All DC Movies
+```{r}
+DC <- filter(comicmovie, Owner == "DC")
+nrow(DC)
+DC
+```
+```{r}
+DC_Budget <- summarise(DC, ave_budget = mean(Budget, na.rm=TRUE))
+DC_Budget
+```
+
+### All movies not made by DC or Mavel
+```{r}
+Other <- filter(comicmovie, Owner == "Other")
+nrow(Other)
+Other
+```
+```{r}
+Other_Budget <- summarise(Other, ave_budget = mean(Budget, na.rm=TRUE))
+Other_Budget
+```
+
+
+
+
+
+## Most Expensive Comic Movie of All Time
+```{r}
+filter(comicmovie, Budget == max(Budget, na.rm = TRUE))
+```
+
+## Cheapest Comic Movie of All Time
+```{r}
+filter(comicmovie, Budget == min(Budget, na.rm = TRUE))
+```
+
+### Group movies by Ratings
+
+#### 7 and up = Good Movie
+#### 6-6.9 = Average Movie
+#### 5 and below = Bad Movie
+```{r}
+Good_Movies <- filter(comicmovie, Rating >= 7)
+arrange(Good_Movies, desc(Rating))
+```
+```{r}
+Good_Marvel <- filter(Good_Movies, Owner=="Marvel")
+Good_DC <- filter(Good_Movies, Owner=="DC")
+Good_Other <- filter(Good_Movies, Owner=="Other")
+```
+
+
+```{r}
+Average_Movies <- filter(comicmovie, Rating >= 6, Rating < 7)
+Average_Movies
+```
+```{r}
+Average_Marvel <- filter(Average_Movies, Owner=="Marvel")
+Average_DC <- filter(Average_Movies, Owner=="DC")
+Average_Other <- filter(Average_Movies, Owner=="Other")
+```
+
+
+```{r}
+Bad_Movies <- filter(comicmovie, Rating < 6,  )
+Bad_Movies
+```
+```{r}
+Bad_Marvel <- filter(Bad_Movies, Owner=="Marvel")
+Bad_DC <- filter(Bad_Movies, Owner=="DC")
+Bad_Other <- filter(Bad_Movies, Owner=="Other")
+```
+
+## Analysis
+#### num of Good Movies
+
+```{r}
+nrow(Good_Marvel)
+nrow(Good_DC)
+nrow(Good_Other)
+```
+
+
+
+#### num ofAverage Movies
+
+```{r}
+nrow(Average_Marvel)
+nrow(Average_DC)
+nrow(Average_Other)
+```
+
+
+#### num of Bad Movies
+```{r}
+nrow(Bad_Marvel)
+nrow(Bad_DC)
+nrow(Bad_Other)
+```
+
+#### Top 10 most Expensive Comic Movies
+```{r}
+Expensive <-arrange(comicmovie, desc(Budget))
+head(Expensive, 10)
+```
+
+#### Top 10 Cheapest Comic Movies
+```{r}
+Cheap <-arrange(comicmovie, Budget)
+head(Cheap, 10)
+```
+
+## Budget Comparison
+```{r}
+Owner_ <- c("Marvel", "DC", "Other")
+ave_Budget <- c(135209145, 112690080, 80250000)
+num_of_Good_Movies <- c(33, 12, 1)
+num_of_Average_Movies <- c(19, 7, 1)
+num_of_Bad_Movies <- c(18, 16, 2)
+  
+df <- data.frame(Owner_, ave_Budget,num_of_Good_Movies, num_of_Average_Movies, num_of_Bad_Movies)
+
+print (df)
+```
+
+## Visual Data
+
+### Comparing Brands Budget
+
+
+```{r}
+ggplot(data = df) + 
+  geom_col(aes(x = Owner_ , y = ave_Budget, fill = Owner_)) 
+```
+
+
+
+### Comparing Number of Good Movies
+```{r}
+ggplot(data = df) + 
+  geom_col(aes(x = Owner_ , y = num_of_Good_Movies, fill = Owner_)) 
+```
+
+### Comparing Number of Average Movies
+```{r}
+ggplot(data = df) + 
+  geom_col(aes(x = Owner_ , y = num_of_Average_Movies, fill = Owner_)) 
+```
+
+### Comparing Number of Bad Movies
+
+```{r}
+ggplot(data = df) + 
+  geom_col(aes(x = Owner_ , y = num_of_Bad_Movies, fill = Owner_)) 
+```
+
+
+
+```{r}
+ggplot(data = comicmovie) + 
+  geom_point(aes(x = Budget, y = Rating, color = Owner))
+```
+
+
+
+
+
+
+
+
+
+
