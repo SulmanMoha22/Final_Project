@@ -12,14 +12,15 @@ output:
 Include a brief **introduction or motivation** here
 
 
-I want to understand the correlation between comic book movies, their budget, and thier prior popularity contributes to a movies success.
+I want to understand the correlation between comic book movies, their budget, and thier year of release
+Also want to analyse the diffrence between the three rating systems; imdb, rotten tomatoes, and audience 
 
 ## Section 2. Data Analysis Plan
 
 List any **initial questions** you plan to explore in this project. 
 
 
-I will compile a list of comic book charters so i can learn; what rank they are on how popular their comics was, how much of a budget did their movie have, their box office success, and their rotten tomato ratings. 
+I will compile a list of comic book charters so i can learn;  how much of a budget did their movie have, their box office success, and their rotten tomato ratings. 
 
 ## Section 3. Data
 
@@ -27,5 +28,5 @@ Include a brief **description of your dataset** (source, available attributes, f
 
 Rating will be pulled from rotten tomatoes.com 
 
-IMDB will give its budget and profits. 
+IMDB will give its budget. 
 
